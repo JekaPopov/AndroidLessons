@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">AndroidLessons</string>
-    <string name="helloString">Hello World!</string>
+    <string name="app_name">Погода</string>
+    <string name="helloString">Привет!</string>
 </resources>
