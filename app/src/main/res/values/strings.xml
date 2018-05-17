@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Погода</string>
-    <string name="hello_String">Привет!</string>
+
+    <string name="city">Город</string>
+    <string name="temp_current">Температура</string>
+    <string name="humidity">Влажность</string>
+    <string name="pressure">Давление</string>
+
+    <string name="temp_format">%1$d°C</string>
+    <string name="pressure_format">%1$d mm</string>
+    <string name="humidity_format">%1$d /%</string>
 </resources>
