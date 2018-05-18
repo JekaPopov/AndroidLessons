@@ -8,5 +8,5 @@
 
     <string name="temp_format">%1$d°C</string>
     <string name="pressure_format">%1$d mm</string>
-    <string name="humidity_format">%1$d /%</string>
+    <string name="humidity_format">%1$d %%</string>
 </resources>
