@@ -4,4 +4,5 @@
     <dimen name="bigText">50sp</dimen>
     <dimen name="bigMiddleText">30sp</dimen>
     <dimen name="smallText">15sp</dimen>
+    <dimen name="layout_marginBottom">4dp</dimen>
 </resources>

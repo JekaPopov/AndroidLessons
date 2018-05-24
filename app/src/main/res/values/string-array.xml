@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="weather">
+    <item name="sunny">@string/sunny</item>
+    <item name="hot">@string/hot</item>
+    <item name="partly_cloudy">@string/partly_cloudy</item>
+    <item name="rain">@string/rain</item>
+    <item name="snow">@string/snow</item>
+    <item name="storm">@string/storm</item>
+    <item name="cloudy">@string/cloudy</item>
+
+</string-array>
+</resources>

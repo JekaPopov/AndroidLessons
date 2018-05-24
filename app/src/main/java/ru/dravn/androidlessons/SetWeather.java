@@ -1,21 +1,16 @@
 package ru.dravn.androidlessons;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Spinner;
 
 import java.util.HashMap;
 
-import static android.provider.Telephony.Mms.Part.TEXT;
 
-
-public class MainActivity extends AppCompatActivity {
+public class SetWeather extends Parameter {
 
     private EditText mCityName;
     private EditText mTempCurrent;
@@ -23,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText mHumidity;
     private EditText mTempMin;
     private EditText mTempMax;
-
+    private Spinner  mWeatherSpinner;
 
     private Button mButton;
 
@@ -32,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_set_weather);
 
 
         mCityName = findViewById(R.id.city);
@@ -43,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
         mTempMax = findViewById(R.id.temp_max);
         mButton = findViewById(R.id.button);
 
-        final String format = getResources().getString(R.string.msg_format);
-
+        mWeatherSpinner = findViewById(R.id.weather);
+        
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,57 +49,59 @@ public class MainActivity extends AppCompatActivity {
                 {
                     showMessage(getResources().getString(R.string.editCity));
                     mCityName.requestFocus();
+                    return;
                 }
                 else if(mTempCurrent.getText().length()==0)
                 {
                     showMessage(getResources().getString(R.string.editTemp));
                     mTempCurrent.requestFocus();
+                    return;
                 }
                 else if(mPressure.getText().length()==0)
                 {
                     showMessage(getResources().getString(R.string.editPressure));
                     mPressure.requestFocus();
+                    return;
                 }
                 else if(mHumidity.getText().length()==0)
                 {
                     showMessage(getResources().getString(R.string.editHumidity));
                     mHumidity.requestFocus();
+                    return;
                 }
                 else if(mTempMin.getText().length()==0)
                 {
                     showMessage(getResources().getString(R.string.editMinTemp));
                     mTempMin.requestFocus();
+                    return;
                 }
                 else if(mTempMax.getText().length()==0)
                 {
                     showMessage(getResources().getString(R.string.editMaxTemp));
                     mTempMax.requestFocus();
+                    return;
                 }
 
                 HashMap<String, String> msg = new HashMap<>();
 
-                msg.put("city", mCityName.getText().toString());
-                msg.put("currTemp", mTempCurrent.getText().toString());
-                msg.put("minTemp", mTempMin.getText().toString());
-                msg.put("maxTemp", mTempMax.getText().toString());
-                msg.put("humidity", mHumidity.getText().toString());
-                msg.put("pressure", mPressure.getText().toString());
-
-                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-                intent.putExtra("map", msg);
+                msg.put(CITY, mCityName.getText().toString());
+                msg.put(CURRTEMP, mTempCurrent.getText().toString());
+                msg.put(MINTEMP, mTempMin.getText().toString());
+                msg.put(MAXTEMP, mTempMax.getText().toString());
+                msg.put(HUMIDITY, mHumidity.getText().toString());
+                msg.put(PRESSURE, mPressure.getText().toString());
+                msg.put(WEATHER, mWeatherSpinner.getSelectedItem().toString());
+                
+                
+                Intent intent = new Intent(SetWeather.this, WeatherView.class);
+                intent.putExtra(MESSAGE, msg);
                 startActivity(intent);
             }
         });
 
-
-
-
     }
 
-    protected void showMessage(String msg)
-    {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
+
 
 
 }
