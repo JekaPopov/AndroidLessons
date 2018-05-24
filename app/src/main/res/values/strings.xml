@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Погода</string>
+    <string name="city">Город</string>
+    <string name="temp_current">Температура</string>
+    <string name="humidity">Влажность</string>
+    <string name="pressure">Давление</string>
+    <string name="temp_format" translatable="false">%1$d°C</string>
+    <string name="pressure_format">%1$d мм</string>
+    <string name="humidity_format" translatable="false">%1$d %%</string>
+    <string name="editCity">Введите город</string>
+    <string name="editTemp">Введите текущую температуру</string>
+    <string name="editMaxTemp">Введите максимальную температуру</string>
+    <string name="editMinTemp">Введите минимальную температуру</string>
+    <string name="editPressure">Введите давление</string>
+    <string name="editHumidity">Введите влажность</string>
+    <string name="sendData">Передать данные</string>
+    <string name="selectWeather">Выберите погоду</string>
+
+    <string name="sunny">Солнечно</string>
+    <string name="hot">Жарко</string>
+    <string name="partly_cloudy">Пременная облачность</string>
+    <string name="rain">Дождь</string>
+    <string name="snow">Снег</string>
+    <string name="storm">Гроза</string>
+    <string name="cloudy">Облачно</string>
+</resources>
