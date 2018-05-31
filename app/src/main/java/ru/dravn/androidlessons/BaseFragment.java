@@ -1,11 +1,14 @@
 package ru.dravn.androidlessons;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 
-public class Parameter extends AppCompatActivity {
+public class BaseFragment extends Fragment {
 
     public static final String TEMP = "temp";
     public static final String HUMIDITY = "hum";
@@ -16,8 +19,17 @@ public class Parameter extends AppCompatActivity {
     public static final String MINTEMP = "minTemp";
     public static final String MAXTEMP = "maxTemp";
     public static final String WEATHER = "weather";
-
     public static final String MESSAGE = "map";
+
+    public MainActivity mActivity;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        mActivity =(MainActivity) this.getActivity();
+
+        super.onCreate(savedInstanceState);
+    }
+
 
     public String format(int val, String valName) {
         String format;
@@ -37,9 +49,9 @@ public class Parameter extends AppCompatActivity {
     }
 
 
-    protected void showMessage(String msg)
+    protected void showMessage(String mMessage)
     {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), mMessage, Toast.LENGTH_SHORT).show();
     }
 
     protected Drawable getImageRes(String name) {

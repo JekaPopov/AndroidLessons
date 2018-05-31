@@ -1,17 +1,29 @@
 package ru.dravn.androidlessons;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-
 import java.util.HashMap;
 
 
-public class SetWeather extends Parameter {
+public class SetWeatherFragment extends BaseFragment {
 
+
+    public static SetWeatherFragment newInstance() {
+        
+        Bundle args = new Bundle();
+        
+        SetWeatherFragment fragment = new SetWeatherFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+    
     private EditText mCityName;
     private EditText mTempCurrent;
     private EditText mPressure;
@@ -19,27 +31,24 @@ public class SetWeather extends Parameter {
     private EditText mTempMin;
     private EditText mTempMax;
     private Spinner  mWeatherSpinner;
-
     private Button mButton;
 
 
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_weather);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_set_weather, container, false);
 
+        mCityName = view.findViewById(R.id.city);
+        mTempCurrent = view.findViewById(R.id.temp_current);
+        mPressure = view.findViewById(R.id.pressure);
+        mHumidity = view.findViewById(R.id.humidity);
+        mTempMin = view.findViewById(R.id.temp_min);
+        mTempMax = view.findViewById(R.id.temp_max);
+        mButton = view.findViewById(R.id.button);
 
-        mCityName = findViewById(R.id.city);
-        mTempCurrent = findViewById(R.id.temp_current);
-        mPressure = findViewById(R.id.pressure);
-        mHumidity = findViewById(R.id.humidity);
-        mTempMin = findViewById(R.id.temp_min);
-        mTempMax = findViewById(R.id.temp_max);
-        mButton = findViewById(R.id.button);
+        mWeatherSpinner = view.findViewById(R.id.weather);
 
-        mWeatherSpinner = findViewById(R.id.weather);
-        
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,26 +91,23 @@ public class SetWeather extends Parameter {
                     return;
                 }
 
-                HashMap<String, String> msg = new HashMap<>();
+                HashMap<String, String> mMessage = new HashMap<>();
 
-                msg.put(CITY, mCityName.getText().toString());
-                msg.put(CURRTEMP, mTempCurrent.getText().toString());
-                msg.put(MINTEMP, mTempMin.getText().toString());
-                msg.put(MAXTEMP, mTempMax.getText().toString());
-                msg.put(HUMIDITY, mHumidity.getText().toString());
-                msg.put(PRESSURE, mPressure.getText().toString());
-                msg.put(WEATHER, mWeatherSpinner.getSelectedItem().toString());
-                
-                
-                Intent intent = new Intent(SetWeather.this, WeatherView.class);
-                intent.putExtra(MESSAGE, msg);
-                startActivity(intent);
+                mMessage.put(CITY, mCityName.getText().toString());
+                mMessage.put(CURRTEMP, mTempCurrent.getText().toString());
+                mMessage.put(MINTEMP, mTempMin.getText().toString());
+                mMessage.put(MAXTEMP, mTempMax.getText().toString());
+                mMessage.put(HUMIDITY, mHumidity.getText().toString());
+                mMessage.put(PRESSURE, mPressure.getText().toString());
+                mMessage.put(WEATHER, mWeatherSpinner.getSelectedItem().toString());
+
+
+                mActivity.showWeatherFragment(mMessage);
             }
         });
 
+
+        return view;
     }
-
-
-
 
 }

@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="hint">#2A2C45</color>
+    <color name="hint">#303F9F</color>
     <color name="editText">#1F000000</color>
-    <color name="textColor">#303F9F</color>
+    <color name="textColor">#2A2C45</color>
 
 </resources>

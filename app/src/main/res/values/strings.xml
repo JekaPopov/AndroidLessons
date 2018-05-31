@@ -24,4 +24,8 @@
     <string name="snow">Снег</string>
     <string name="storm">Гроза</string>
     <string name="cloudy">Облачно</string>
+    <string name="menu">Просто меню</string>
+    <string name="weatherFragment">WeatherViewFragment</string>
+    <string name="menuFragment">menuFragment</string>
+    <string name="setWeatherFragment">setWeatherFragment</string>
 </resources>
