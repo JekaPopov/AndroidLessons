@@ -6,4 +6,6 @@
     <dimen name="smallText">15sp</dimen>
     <dimen name="layout_marginBottom">4dp</dimen>
     <dimen name="minWidth">64dp</dimen>
+    <dimen name="corner_radius">6dp</dimen>
+    <dimen name="card_view_elevation">6dp</dimen>
 </resources>

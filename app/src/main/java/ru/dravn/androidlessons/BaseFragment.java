@@ -4,24 +4,26 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 
 public class BaseFragment extends Fragment {
 
     public static final String TEMP = "temp";
-    public static final String HUMIDITY = "hum";
-    public static final String PRESSURE = "press";
+    public static final String HUMIDITY = "humidity";
+    public static final String PRESSURE = "pressure";
 
-    public static final String CITY = "city";
+    public static final String CITY = "name";
     public static final String CURRTEMP = "currTemp";
-    public static final String MINTEMP = "minTemp";
-    public static final String MAXTEMP = "maxTemp";
+    public static final String MINTEMP = "temp_min";
+    public static final String MAXTEMP = "temp_max";
     public static final String WEATHER = "weather";
-    public static final String MESSAGE = "map";
+    public static final String MESSAGE = "message";
 
-    public MainActivity mActivity;
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
+
+    protected MainActivity mActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class BaseFragment extends Fragment {
     }
 
 
-    public String format(int val, String valName) {
+    public String format(String val, String valName) {
         String format;
         switch (valName) {
             case TEMP:
@@ -51,7 +53,7 @@ public class BaseFragment extends Fragment {
 
     protected void showMessage(String mMessage)
     {
-        Toast.makeText(getActivity(), mMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), mMessage, Toast.LENGTH_LONG).show();
     }
 
     protected Drawable getImageRes(String name) {

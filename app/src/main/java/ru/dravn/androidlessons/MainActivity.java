@@ -4,7 +4,8 @@ package ru.dravn.androidlessons;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageButton;
 
 
@@ -13,7 +14,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
 
     FragmentManager mFragmentManager;
-    ImageButton mMenuButton;
+    ImageButton mMapButton;
     BaseFragment fragment;
 
     @Override
@@ -21,28 +22,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMenuButton = findViewById(R.id.menu);
+        mMapButton = findViewById(R.id.map);
         mFragmentManager = getSupportFragmentManager();
 
-        if(mFragmentManager.findFragmentByTag(getString(R.string.setWeatherFragment))==null) {
-            fragment = SetWeatherFragment.newInstance();
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.fragment, fragment, getString(R.string.setWeatherFragment))
-                    .addToBackStack(getString(R.string.setWeatherFragment))
-                    .commit();
+        if(mFragmentManager.findFragmentByTag(getString(R.string.weatherFragment))==null) {
+            showWeatherFragment(null);
         }
 
-        mMenuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(fragment instanceof MenuFragment) {
-                    mFragmentManager.popBackStack();
-                    fragment=null;
-                }
-                else
-                showMenuFragment();
-            }
-        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.selectCity:
+                showCityListFragment();
+                return true;
+            case R.id.selectByMap:
+                showMapFragment();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void showWeatherFragment(HashMap<String, String> mMessage) {
@@ -55,13 +61,22 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    public void showMenuFragment() {
-        fragment = MenuFragment.newInstance();
+    public void showMapFragment() {
+        fragment = MapFragment.newInstance();
         mFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment, fragment,getString(R.string.menuFragment))
-                .addToBackStack(getString(R.string.menuFragment))
+                .replace(R.id.fragment, fragment,getString(R.string.mapFragment))
+                .addToBackStack(getString(R.string.mapFragment))
                 .commit();
     }
 
+
+    public void showCityListFragment() {
+        fragment = CityListFragment.newInstance();
+        mFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment, fragment,getString(R.string.CityListFragment))
+                .addToBackStack(getString(R.string.CityListFragment))
+                .commit();
+    }
 }

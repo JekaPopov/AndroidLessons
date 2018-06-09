@@ -5,9 +5,9 @@
     <string name="temp_current">Температура</string>
     <string name="humidity">Влажность</string>
     <string name="pressure">Давление</string>
-    <string name="temp_format" translatable="false">%1$d°C</string>
-    <string name="pressure_format">%1$d мм</string>
-    <string name="humidity_format" translatable="false">%1$d %%</string>
+    <string name="temp_format" translatable="false">%1$s°C</string>
+    <string name="pressure_format">%1$s мм</string>
+    <string name="humidity_format" translatable="false">%1$s %%</string>
     <string name="editCity">Введите город</string>
     <string name="editTemp">Введите текущую температуру</string>
     <string name="editMaxTemp">Введите максимальную температуру</string>
@@ -26,6 +26,24 @@
     <string name="cloudy">Облачно</string>
     <string name="menu">Просто меню</string>
     <string name="weatherFragment">WeatherViewFragment</string>
-    <string name="menuFragment">menuFragment</string>
+    <string name="mapFragment">MapFragment</string>
     <string name="setWeatherFragment">setWeatherFragment</string>
+
+
+    <string name="moscow">Москва</string>
+    <string name="paris">Париж</string>
+    <string name="berlin">Берлин</string>
+    <string name="london">Лондон</string>
+    <string name="kiev">Киев</string>
+    <string name="minsk">Минск</string>
+    <string name="rim">Рим</string>
+    <string name="CityListFragment">CityListFragment</string>
+
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBGP0UxstYDQtxrBi6bwbdwoMwOlxd0ASE</string>
+    <string name="openWeatherMapApiKey">77fa93e1f50e406392affb609bcd8278</string>
+    <string name="permission">Необходимо разрешение на определение местоположения</string>
+
+    <string name="setting">Настройки</string>
+    <string name="selectCity">Выбор города</string>
+    <string name="selectByMap">Выбор на карте</string>
 </resources>

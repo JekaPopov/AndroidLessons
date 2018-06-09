@@ -23,4 +23,13 @@
     <string name="storm">Storm</string>
     <string name="cloudy">Cloudy</string>
 
+
+    <string name="moscow">Moscow</string>
+    <string name="paris">Paris</string>
+    <string name="berlin">Berlin</string>
+    <string name="london">London</string>
+    <string name="kiev">Kiev</string>
+    <string name="minsk">Minsk</string>
+    <string name="rim">Rim</string>
+
 </resources>

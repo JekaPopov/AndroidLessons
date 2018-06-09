@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:textAllCaps="true"
             android:textSize="@dimen/smallText"
             android:gravity="center" />
 
@@ -56,7 +57,7 @@
         android:layout_below="@+id/temp_current"
         android:layout_toEndOf="@+id/textView2"
         android:layout_toRightOf="@+id/textView2"
-        android:textSize="@dimen/bigMiddleText" />
+        android:textSize="@dimen/smallText" />
 
     <TextView
         android:id="@+id/temp_min"
@@ -66,7 +67,7 @@
         android:layout_alignBottom="@+id/temp_max"
         android:layout_toLeftOf="@+id/textView2"
         android:layout_toStartOf="@+id/textView2"
-        android:textSize="@dimen/bigMiddleText" />
+        android:textSize="@dimen/smallText" />
 
     <TextView
         android:id="@+id/textView4"

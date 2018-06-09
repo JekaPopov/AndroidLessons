@@ -7,16 +7,6 @@
     style="@style/MyStyle"
     tools:context=".MainActivity">
 
-    <ImageButton
-        android:id="@+id/menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:foregroundGravity="top|right"
-        android:layout_centerHorizontal="true"
-        android:src="@android:drawable/ic_menu_more"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
 
     <FrameLayout
         android:id="@+id/fragment"
