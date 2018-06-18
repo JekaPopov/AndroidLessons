@@ -23,11 +23,10 @@ public class BaseFragment extends Fragment {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
 
-    protected MainActivity mActivity;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        mActivity =(MainActivity) this.getActivity();
 
         super.onCreate(savedInstanceState);
     }

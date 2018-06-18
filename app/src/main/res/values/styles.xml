@@ -15,4 +15,13 @@
         <item name="android:typeface">monospace</item>
         <item name="android:layout_marginBottom">@dimen/layout_marginBottom</item>
     </style>
+
+    <style name="MyStyle.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="MyStyle.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="MyStyle.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

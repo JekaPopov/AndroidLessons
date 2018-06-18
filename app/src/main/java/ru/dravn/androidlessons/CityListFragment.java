@@ -14,6 +14,8 @@ import java.util.HashMap;
 
 public class CityListFragment extends BaseFragment{
 
+    private MainActivity mActivity;
+
     public static CityListFragment newInstance() {
         Bundle args = new Bundle();
         CityListFragment fragment = new CityListFragment();
@@ -29,6 +31,7 @@ public class CityListFragment extends BaseFragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.city_list_fragment, container, false);
 
+        mActivity = (MainActivity)getActivity();
         RecyclerView recyclerView = v.findViewById(R.id.list);
 
         CityAdapter adapter = new CityAdapter(mActivity, getResources().getStringArray(R.array.city));

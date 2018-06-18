@@ -24,6 +24,8 @@ import java.util.HashMap;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
+    private MainActivity mActivity;
+
     public static MapFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -42,6 +44,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
 
         View view = inflater.inflate(R.layout.map, container,false);
 
+        mActivity = (MainActivity)getActivity();
         return view;
     }
 

@@ -45,9 +45,13 @@ public class WeatherViewFragment extends BaseFragment {
     private ImageView weatherImage;
 
 
+    private MainActivity mActivity;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mActivity = (MainActivity)getActivity();
         if (getArguments().getSerializable(MESSAGE) != null)
             mMessage = (HashMap<String, String>) getArguments().getSerializable(MESSAGE);
         else
