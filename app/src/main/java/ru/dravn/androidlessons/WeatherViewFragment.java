@@ -3,6 +3,10 @@ package ru.dravn.androidlessons;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -16,9 +20,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import org.json.JSONObject;
+
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import static android.content.Context.SENSOR_SERVICE;
 
 
 public class WeatherViewFragment extends BaseFragment {
@@ -33,7 +43,9 @@ public class WeatherViewFragment extends BaseFragment {
         return fragment;
     }
 
-    private HashMap<String, String> mMessage=new HashMap<>();
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private HashMap<String, String> mMessage = new HashMap<>();
     private Handler handler;
     private TextView cityName;
     private TextView temp_current;
@@ -41,35 +53,23 @@ public class WeatherViewFragment extends BaseFragment {
     private TextView humidity;
     private TextView temp_min;
     private TextView temp_max;
+    private TextView temp_device;
+    private TextView temp_deviceText;
     private TextView time_request;
     private ImageView weatherImage;
 
-
+    private SensorManager sensorManager;
+    private Sensor sensorTemp;
     private MainActivity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mActivity = (MainActivity)getActivity();
-        if (getArguments().getSerializable(MESSAGE) != null)
-            mMessage = (HashMap<String, String>) getArguments().getSerializable(MESSAGE);
-        else
-        {
-            LocationManager locationManager = (LocationManager)
-                    mActivity.getSystemService(mActivity.LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
+        mActivity = (MainActivity) getActivity();
 
-            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                showMessage(getString(R.string.permission));
-            }
-            Location myLocation = locationManager.getLastKnownLocation(locationManager
-                    .getBestProvider(criteria, false));
-            mMessage.put(LATITUDE, String.valueOf(myLocation.getLatitude()));
-            mMessage.put(LONGITUDE, String.valueOf(myLocation.getLongitude()));
-        }
     }
+
 
     @Nullable
     @Override
@@ -84,23 +84,47 @@ public class WeatherViewFragment extends BaseFragment {
         humidity = view.findViewById(R.id.humidity);
         temp_min = view.findViewById(R.id.temp_min);
         temp_max = view.findViewById(R.id.temp_max);
+        temp_device = view.findViewById(R.id.temp_device);
+        temp_deviceText = view.findViewById(R.id.temp_deviceText);
         time_request = view.findViewById(R.id.time_request);
         weatherImage = view.findViewById(R.id.weatherImage);
 
+
+        if (getArguments().getSerializable(MESSAGE) != null) {
+            mMessage = (HashMap<String, String>) getArguments().getSerializable(MESSAGE);
             updateWeatherData();
+        } else {
+            getCurrentLocation();
+        }
+
+
+        sensorManager = (SensorManager) mActivity.getSystemService(SENSOR_SERVICE);
+
+        sensorTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+
+        if(sensorTemp!=null)
+        sensorManager.registerListener(listenerDeviceTemp, sensorTemp,
+        SensorManager.SENSOR_DELAY_NORMAL);
+        else
+        {
+            temp_deviceText.setVisibility(View.GONE);
+        }
 
         return view;
     }
+
+
+
 
     //Обновление/загрузка погодных данных
     private void updateWeatherData() {
         new Thread() {
             public void run() {
-                JSONObject json= null;
-                if(mMessage.get(CITY)!=null) {
+                JSONObject json = null;
+                if (mMessage.get(CITY) != null) {
                     json = WeatherData.getDate(mActivity, mMessage.get(CITY));
                 }
-                if(mMessage.get(LATITUDE)!=null&&mMessage.get(LONGITUDE)!=null){
+                if (mMessage.get(LATITUDE) != null && mMessage.get(LONGITUDE) != null) {
                     json = WeatherData.getDate(mActivity, mMessage.get(LATITUDE), mMessage.get(LONGITUDE));
                 }
                 if (json == null) {
@@ -130,7 +154,7 @@ public class WeatherViewFragment extends BaseFragment {
             JSONObject main = json.getJSONObject("main");
 
             //перевод в ммHg
-            int prMM = (int)(main.getInt(PRESSURE)*0.75006375541921);
+            int prMM = (int) (main.getInt(PRESSURE) * 0.75006375541921);
             temp_current.setText(format(main.getString(TEMP), TEMP));
             pressure.setText(format(String.valueOf(prMM), PRESSURE));
             humidity.setText(format(main.getString(HUMIDITY), HUMIDITY));
@@ -167,7 +191,73 @@ public class WeatherViewFragment extends BaseFragment {
             case 8:
                 return getImageRes(getString(R.string.sunny));
 
-            default: return getImageRes(getString(R.string.sunny));
+            default:
+                return getImageRes(getString(R.string.sunny));
         }
     }
+
+
+    private void getCurrentLocation() {
+
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestForLocationPermission();
+        } else {
+            LocationManager locationManager = (LocationManager)
+                    mActivity.getSystemService(mActivity.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+
+            Location myLocation = locationManager.getLastKnownLocation(locationManager
+                    .getBestProvider(criteria, false));
+            if (myLocation != null) {
+                mMessage.put(LATITUDE, String.valueOf(myLocation.getLatitude()));
+                mMessage.put(LONGITUDE, String.valueOf(myLocation.getLongitude()));
+                updateWeatherData();
+            } else {
+                mActivity.showMapFragment();
+            }
+        }
+    }
+
+
+    public void requestForLocationPermission() {
+
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            ActivityCompat.requestPermissions(mActivity, new
+                    String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[]
+            permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED) {
+
+                getCurrentLocation();
+            }
+        }
+    }
+
+    private void showDeviceTempSensors(SensorEvent event) {
+
+        temp_device.setText(String.valueOf(event.values[0]));
+    }
+
+    SensorEventListener listenerDeviceTemp = new SensorEventListener() {
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            showDeviceTempSensors(event);
+        }
+    };
+
+
 }

@@ -81,10 +81,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         Location myLocation = locationManager.getLastKnownLocation(locationManager
                 .getBestProvider(criteria, false));
 
-        map.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
+        if(myLocation!=null) {
+            map.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
 
-        map.moveCamera(CameraUpdateFactory.newLatLng(
-                new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+            map.moveCamera(CameraUpdateFactory.newLatLng(
+                    new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+        }
     }
 
 

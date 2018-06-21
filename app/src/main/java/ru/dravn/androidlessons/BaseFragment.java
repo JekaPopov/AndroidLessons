@@ -24,7 +24,6 @@ public class BaseFragment extends Fragment {
     public static final String LONGITUDE = "longitude";
 
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -50,8 +49,7 @@ public class BaseFragment extends Fragment {
     }
 
 
-    protected void showMessage(String mMessage)
-    {
+    protected void showMessage(String mMessage) {
         Toast.makeText(getActivity(), mMessage, Toast.LENGTH_LONG).show();
     }
 
