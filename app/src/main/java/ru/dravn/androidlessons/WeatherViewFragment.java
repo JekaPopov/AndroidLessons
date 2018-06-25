@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -58,17 +59,11 @@ public class WeatherViewFragment extends BaseFragment {
     private TextView time_request;
     private ImageView weatherImage;
 
+    private boolean mCancel = false;
+
     private SensorManager sensorManager;
     private Sensor sensorTemp;
-    private MainActivity mActivity;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mActivity = (MainActivity) getActivity();
-
-    }
+    UpdateWeatherData updateWeatherData;
 
 
     @Nullable
@@ -89,24 +84,25 @@ public class WeatherViewFragment extends BaseFragment {
         time_request = view.findViewById(R.id.time_request);
         weatherImage = view.findViewById(R.id.weatherImage);
 
+        updateWeatherData = new UpdateWeatherData();
 
         if (getArguments().getSerializable(MESSAGE) != null) {
             mMessage = (HashMap<String, String>) getArguments().getSerializable(MESSAGE);
-            updateWeatherData();
+
+            updateWeatherData.execute();
         } else {
             getCurrentLocation();
         }
 
 
-        sensorManager = (SensorManager) mActivity.getSystemService(SENSOR_SERVICE);
+        sensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
 
         sensorTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
 
-        if(sensorTemp!=null)
-        sensorManager.registerListener(listenerDeviceTemp, sensorTemp,
-        SensorManager.SENSOR_DELAY_NORMAL);
-        else
-        {
+        if (sensorTemp != null)
+            sensorManager.registerListener(listenerDeviceTemp, sensorTemp,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+        else {
             temp_deviceText.setVisibility(View.GONE);
         }
 
@@ -114,36 +110,64 @@ public class WeatherViewFragment extends BaseFragment {
     }
 
 
+    private class UpdateWeatherData extends AsyncTask<Void, Void, JSONObject> {
 
-
-    //Обновление/загрузка погодных данных
-    private void updateWeatherData() {
-        new Thread() {
-            public void run() {
-                JSONObject json = null;
-                if (mMessage.get(CITY) != null) {
-                    json = WeatherData.getDate(mActivity, mMessage.get(CITY));
-                }
-                if (mMessage.get(LATITUDE) != null && mMessage.get(LONGITUDE) != null) {
-                    json = WeatherData.getDate(mActivity, mMessage.get(LATITUDE), mMessage.get(LONGITUDE));
-                }
-                if (json == null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            showMessage("Ошибка сервера");
-                        }
-                    });
-                } else {
-                    final JSONObject finalJson = json;
-                    handler.post(new Runnable() {
-                        public void run() {
-                            renderWeather(finalJson);
-                        }
-                    });
-                }
+        @Override
+        protected JSONObject doInBackground(Void... voids) {
+            JSONObject json = null;
+            if (mMessage.get(CITY) != null) {
+                json = WeatherData.getDate(getActivity(), mMessage.get(CITY));
             }
-        }.start();
+            if (mMessage.get(LATITUDE) != null && mMessage.get(LONGITUDE) != null) {
+                json = WeatherData.getDate(getActivity(), mMessage.get(LATITUDE), mMessage.get(LONGITUDE));
+            }
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+            if (!mCancel)
+                renderWeather(result);
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            mCancel = true;
+        }
     }
+
+
+//    //Обновление/загрузка погодных данных
+//    private void updateWeatherData() {
+//        new Thread() {
+//            public void run() {
+//                JSONObject json = null;
+//                if (mMessage.get(CITY) != null) {
+//                    json = WeatherData.getDate(mActivity, mMessage.get(CITY));
+//                }
+//                if (mMessage.get(LATITUDE) != null && mMessage.get(LONGITUDE) != null) {
+//                    json = WeatherData.getDate(mActivity, mMessage.get(LATITUDE), mMessage.get(LONGITUDE));
+//                }
+//                if (json == null) {
+//                    handler.post(new Runnable() {
+//                        public void run() {
+//                            showMessage("Ошибка сервера");
+//                        }
+//                    });
+//                } else {
+//                    final JSONObject finalJson = json;
+//                    handler.post(new Runnable() {
+//                        public void run() {
+//                            renderWeather(finalJson);
+//                        }
+//                    });
+//                }
+//            }
+//        }.start();
+//    }
+
 
     //Обработка загруженных данных
     private void renderWeather(JSONObject json) {
@@ -155,7 +179,7 @@ public class WeatherViewFragment extends BaseFragment {
 
             //перевод в ммHg
             int prMM = (int) (main.getInt(PRESSURE) * 0.75006375541921);
-            temp_current.setText(format(main.getString(TEMP), TEMP));
+            temp_current.setText(format((String.valueOf((main.getInt(TEMP)))), TEMP));
             pressure.setText(format(String.valueOf(prMM), PRESSURE));
             humidity.setText(format(main.getString(HUMIDITY), HUMIDITY));
             temp_max.setText(format(main.getString(MAXTEMP), TEMP));
@@ -199,12 +223,12 @@ public class WeatherViewFragment extends BaseFragment {
 
     private void getCurrentLocation() {
 
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestForLocationPermission();
         } else {
             LocationManager locationManager = (LocationManager)
-                    mActivity.getSystemService(mActivity.LOCATION_SERVICE);
+                    getActivity().getSystemService(getActivity().LOCATION_SERVICE);
             Criteria criteria = new Criteria();
 
             Location myLocation = locationManager.getLastKnownLocation(locationManager
@@ -212,9 +236,11 @@ public class WeatherViewFragment extends BaseFragment {
             if (myLocation != null) {
                 mMessage.put(LATITUDE, String.valueOf(myLocation.getLatitude()));
                 mMessage.put(LONGITUDE, String.valueOf(myLocation.getLongitude()));
-                updateWeatherData();
+
+
+                updateWeatherData.execute();
             } else {
-                mActivity.showMapFragment();
+                ((MainActivity) getActivity()).showMapFragment();
             }
         }
     }
@@ -222,10 +248,10 @@ public class WeatherViewFragment extends BaseFragment {
 
     public void requestForLocationPermission() {
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(mActivity,
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-            ActivityCompat.requestPermissions(mActivity, new
+            ActivityCompat.requestPermissions(getActivity(), new
                     String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
         }
     }
@@ -260,4 +286,10 @@ public class WeatherViewFragment extends BaseFragment {
     };
 
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        updateWeatherData.cancel(true);
+    }
 }

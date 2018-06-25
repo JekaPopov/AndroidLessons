@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
-    private MainActivity mActivity;
+    // private MainActivity mActivity;
 
     public static MapFragment newInstance() {
 
@@ -41,11 +41,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.map, container, false);
 
-        View view = inflater.inflate(R.layout.map, container,false);
-
-        mActivity = (MainActivity)getActivity();
-        return view;
     }
 
     @Override
@@ -68,20 +65,20 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
 
         map.setOnMapLongClickListener(this);
 
-        if (ActivityCompat.checkSelfPermission(mActivity,
+        if (ActivityCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(mActivity, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                || ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
         }
 
         LocationManager locationManager = (LocationManager)
-                mActivity.getSystemService(mActivity.LOCATION_SERVICE);
+                getActivity().getSystemService(getActivity().LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
         Location myLocation = locationManager.getLastKnownLocation(locationManager
                 .getBestProvider(criteria, false));
 
-        if(myLocation!=null) {
+        if (myLocation != null) {
             map.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
 
             map.moveCamera(CameraUpdateFactory.newLatLng(
@@ -97,6 +94,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         message.put(LATITUDE, String.valueOf(latLng.latitude));
         message.put(LONGITUDE, String.valueOf(latLng.longitude));
 
-        mActivity.showWeatherFragment(message);
+        ((MainActivity) getActivity()).showWeatherFragment(message);
     }
 }

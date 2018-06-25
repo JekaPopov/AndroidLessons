@@ -12,9 +12,8 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
-public class CityListFragment extends BaseFragment{
+public class CityListFragment extends BaseFragment {
 
-    private MainActivity mActivity;
 
     public static CityListFragment newInstance() {
         Bundle args = new Bundle();
@@ -31,10 +30,9 @@ public class CityListFragment extends BaseFragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.city_list_fragment, container, false);
 
-        mActivity = (MainActivity)getActivity();
         RecyclerView recyclerView = v.findViewById(R.id.list);
 
-        CityAdapter adapter = new CityAdapter(mActivity, getResources().getStringArray(R.array.city));
+        CityAdapter adapter = new CityAdapter(getContext(), getResources().getStringArray(R.array.city));
         recyclerView.setAdapter(adapter);
 
         return v;
@@ -68,7 +66,9 @@ public class CityListFragment extends BaseFragment{
                 @Override
                 public void onClick(View v) {
                     message.put(CITY, holder.cityName.getText().toString());
-                    mActivity.showWeatherFragment(message);
+                    if (((MainActivity) getActivity()).getMyService() != null)
+                        ((MainActivity) getActivity()).getMyService().setCity(message.get(CITY));
+                    ((MainActivity) getActivity()).showWeatherFragment(message);
                 }
             });
         }

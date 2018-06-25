@@ -1,6 +1,10 @@
 package ru.dravn.androidlessons;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,7 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageButton;
+
 
 import java.util.HashMap;
 
@@ -19,8 +23,11 @@ public class MainActivity extends AppCompatActivity
 
 
     FragmentManager mFragmentManager;
-    ImageButton mMapButton;
     BaseFragment fragment;
+    Intent intent;
+    ServiceConnection sConn;
+    boolean bound;
+    WeatherService myService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +35,23 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 
-        mMapButton = findViewById(R.id.map);
         mFragmentManager = getSupportFragmentManager();
+
+        intent = new Intent(this, WeatherService.class);
+
+        sConn = new ServiceConnection() {
+            public void onServiceConnected(ComponentName name, IBinder binder) {
+                bound = true;
+                myService = ((WeatherService.MyBinder) binder).getService();
+            }
+
+            public void onServiceDisconnected(ComponentName name) {
+                bound = false;
+            }
+        };
+
+        startService(intent);
+
 
         if(mFragmentManager.findFragmentByTag(getString(R.string.weatherFragment))==null) {
             showWeatherFragment(null);
@@ -47,6 +69,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView =  findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bindService(intent, sConn, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -89,8 +117,8 @@ public class MainActivity extends AppCompatActivity
         fragment = WeatherViewFragment.newInstance(mMessage);
 
         mFragmentManager.beginTransaction()
-                .replace(R.id.fragment, fragment,getString(R.string.weatherFragment))
-                .addToBackStack(getString(R.string.weatherFragment))
+                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+                .addToBackStack(fragment.getClass().getSimpleName())
                 .commit();
     }
 
@@ -98,8 +126,8 @@ public class MainActivity extends AppCompatActivity
         fragment = MapFragment.newInstance();
         mFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment, fragment,getString(R.string.mapFragment))
-                .addToBackStack(getString(R.string.mapFragment))
+                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+                .addToBackStack(fragment.getClass().getSimpleName())
                 .commit();
     }
 
@@ -108,8 +136,8 @@ public class MainActivity extends AppCompatActivity
         fragment = CityListFragment.newInstance();
         mFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment, fragment,getString(R.string.CityListFragment))
-                .addToBackStack(getString(R.string.CityListFragment))
+                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+                .addToBackStack(fragment.getClass().getSimpleName())
                 .commit();
     }
 
@@ -132,5 +160,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public WeatherService getMyService() {
+        return myService;
+    }
+
+    protected void onStop() {
+        super.onStop();
+        unbindService(sConn);
     }
 }
