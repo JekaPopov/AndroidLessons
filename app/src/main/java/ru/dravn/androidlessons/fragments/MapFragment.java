@@ -1,4 +1,4 @@
-package ru.dravn.androidlessons;
+package ru.dravn.androidlessons.fragments;
 
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -18,13 +18,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 
+import ru.dravn.androidlessons.MainActivity;
+import ru.dravn.androidlessons.R;
+import ru.dravn.androidlessons.utils.Const;
+
 public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
-    // private MainActivity mActivity;
 
     public static MapFragment newInstance() {
 
@@ -91,8 +93,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
     public void onMapLongClick(LatLng latLng) {
         HashMap<String, String> message = new HashMap<>();
 
-        message.put(LATITUDE, String.valueOf(latLng.latitude));
-        message.put(LONGITUDE, String.valueOf(latLng.longitude));
+        message.put(Const.LATITUDE, String.valueOf(latLng.latitude));
+        message.put(Const.LONGITUDE, String.valueOf(latLng.longitude));
 
         ((MainActivity) getActivity()).showWeatherFragment(message);
     }

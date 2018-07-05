@@ -18,6 +18,12 @@ import android.view.MenuItem;
 
 import java.util.HashMap;
 
+import ru.dravn.androidlessons.fragments.BaseFragment;
+import ru.dravn.androidlessons.fragments.CityListFragment;
+import ru.dravn.androidlessons.fragments.MapFragment;
+import ru.dravn.androidlessons.fragments.WeatherViewFragment;
+import ru.dravn.androidlessons.service.WeatherService;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -162,12 +168,16 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public WeatherService getMyService() {
+    public WeatherService WeatherService  () {
         return myService;
     }
 
     protected void onStop() {
         super.onStop();
         unbindService(sConn);
+    }
+
+    public WeatherService getMyService() {
+        return myService;
     }
 }

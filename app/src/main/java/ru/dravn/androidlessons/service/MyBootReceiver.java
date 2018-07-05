@@ -1,4 +1,4 @@
-package ru.dravn.androidlessons;
+package ru.dravn.androidlessons.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

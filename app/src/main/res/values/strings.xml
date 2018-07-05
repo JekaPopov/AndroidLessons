@@ -58,4 +58,6 @@
     <string name="share">Поделиться</string>
     <string name="exit">Выход</string>
     <string name="device_temp">Температура устройства</string>
+    <string name="serverError">Ошибка сервера</string>
+    <string name="image_url">http://openweathermap.org/img/w/%1$s.png</string>
 </resources>

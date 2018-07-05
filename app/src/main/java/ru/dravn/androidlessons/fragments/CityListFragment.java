@@ -1,4 +1,4 @@
-package ru.dravn.androidlessons;
+package ru.dravn.androidlessons.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.HashMap;
+
+import ru.dravn.androidlessons.MainActivity;
+import ru.dravn.androidlessons.R;
+import ru.dravn.androidlessons.utils.Const;
 
 public class CityListFragment extends BaseFragment {
 
@@ -65,9 +69,9 @@ public class CityListFragment extends BaseFragment {
             holder.cityName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    message.put(CITY, holder.cityName.getText().toString());
+                    message.put(Const.CITY, holder.cityName.getText().toString());
                     if (((MainActivity) getActivity()).getMyService() != null)
-                        ((MainActivity) getActivity()).getMyService().setCity(message.get(CITY));
+                        ((MainActivity) getActivity()).getMyService().setCity(message.get(Const.CITY));
                     ((MainActivity) getActivity()).showWeatherFragment(message);
                 }
             });
