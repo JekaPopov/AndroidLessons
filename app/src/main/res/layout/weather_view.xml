@@ -104,14 +104,5 @@
 
 
 
-        <TextView
-            android:id="@+id/temp_device"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/humidity"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/middleText" />
-
-
     </RelativeLayout>
 </ScrollView>

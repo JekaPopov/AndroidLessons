@@ -60,4 +60,5 @@
     <string name="device_temp">Температура устройства</string>
     <string name="serverError">Ошибка сервера</string>
     <string name="image_url">http://openweathermap.org/img/w/%1$s.png</string>
+    <string name="edit_text_city">Введите город</string>
 </resources>

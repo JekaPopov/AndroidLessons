@@ -66,7 +66,7 @@ public class WeatherService extends Service {
         callback = new Callback<WeatherRequest>() {
             @Override
             public void onResponse(Call<WeatherRequest> call, Response<WeatherRequest> response) {
-                if (response != null)
+                if (response.body() != null)
                     makeNote(response.body());
             }
 

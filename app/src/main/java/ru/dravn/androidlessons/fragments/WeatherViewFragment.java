@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import okhttp3.internal.Util;
@@ -53,7 +54,6 @@ public class WeatherViewFragment extends BaseFragment {
     private TextView humidity;
     private TextView temp_min;
     private TextView temp_max;
-    private TextView temp_device;
     private TextView time_request;
     private ImageView weatherImage;
 
@@ -71,15 +71,16 @@ public class WeatherViewFragment extends BaseFragment {
         humidity = view.findViewById(R.id.humidity);
         temp_min = view.findViewById(R.id.temp_min);
         temp_max = view.findViewById(R.id.temp_max);
-        temp_device = view.findViewById(R.id.temp_device);
         time_request = view.findViewById(R.id.time_request);
         weatherImage = view.findViewById(R.id.weatherImage);
 
         callback = new Callback<WeatherRequest>() {
             @Override
             public void onResponse(Call<WeatherRequest> call, Response<WeatherRequest> response) {
-                if (response != null)
+                if (response.body() != null)
                     renderWeather(response.body());
+                else
+                    Toast.makeText(getContext(), "Город не найден", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -126,10 +127,12 @@ public class WeatherViewFragment extends BaseFragment {
 
             setWeatherIcon(response.getWeather().get(0).getIcon(), weatherImage);
 
+        Date date = new Date();
 
+        long millis = date.getTime();
             time_request.setText(DateFormat
                     .getDateTimeInstance(0, 2)
-                    .format(response.getDt() * 1000));
+                    .format(millis));
     }
 
     //Подстановка нужной иконки

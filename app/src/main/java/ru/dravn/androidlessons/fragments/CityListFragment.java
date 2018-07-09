@@ -5,19 +5,33 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
+import ru.dravn.androidlessons.App;
 import ru.dravn.androidlessons.MainActivity;
 import ru.dravn.androidlessons.R;
 import ru.dravn.androidlessons.utils.Const;
 
 public class CityListFragment extends BaseFragment {
 
+
+    private EditText editText;
+    private HashSet citiesName;
+    private CityAdapter adapter;
+    private HashMap<String, String> message = new HashMap<>();
 
     public static CityListFragment newInstance() {
         Bundle args = new Bundle();
@@ -27,7 +41,7 @@ public class CityListFragment extends BaseFragment {
     }
 
 
-    private HashMap<String, String> message = new HashMap<>();
+
 
     @Nullable
     @Override
@@ -35,8 +49,31 @@ public class CityListFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.city_list_fragment, container, false);
 
         RecyclerView recyclerView = v.findViewById(R.id.list);
+        editText = v.findViewById(R.id.edit_text);
 
-        CityAdapter adapter = new CityAdapter(getContext(), getResources().getStringArray(R.array.city));
+        editText.setOnKeyListener(new View.OnKeyListener()
+                                  {
+                                      public boolean onKey(View v, int keyCode, KeyEvent event)
+                                      {
+                                          if(event.getAction() == KeyEvent.ACTION_DOWN &&
+                                                  (keyCode == KeyEvent.KEYCODE_ENTER))
+                                          {
+                                              citiesName.add(editText.getText().toString());
+                                              adapter.notifyDataSetChanged();
+                                              App.setCitiesName(citiesName);
+
+                                              message.put(Const.CITY, editText.getText().toString());
+                                              ((MainActivity) getActivity()).showWeatherFragment(message);
+                                              return true;
+                                          }
+                                          return false;
+                                      }
+                                  }
+        );
+
+        citiesName = App.getCitiesName();
+
+        adapter = new CityAdapter(getContext(), (String[]) citiesName.toArray(new String[citiesName.size()]));
         recyclerView.setAdapter(adapter);
 
         return v;
