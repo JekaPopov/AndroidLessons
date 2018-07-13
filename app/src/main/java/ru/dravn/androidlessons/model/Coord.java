@@ -6,18 +6,28 @@ import com.google.gson.annotations.SerializedName;
 
 public class Coord {
 
-    @SerializedName("lon")
-    @Expose
-    private Double lon;
     @SerializedName("lat")
     @Expose
     private Double lat;
+    @SerializedName("lon")
+    @Expose
+    private Double lon;
 
-    public Double getLon() {
-        return lon;
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public Coord() {
     }
 
-    public void setLon(Double lon) {
+    /**
+     * 
+     * @param lon
+     * @param lat
+     */
+    public Coord(Double lat, Double lon) {
+        super();
+        this.lat = lat;
         this.lon = lon;
     }
 
@@ -27,6 +37,14 @@ public class Coord {
 
     public void setLat(Double lat) {
         this.lat = lat;
+    }
+
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
     }
 
 }

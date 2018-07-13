@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,11 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import ru.dravn.androidlessons.fragments.BaseFragment;
 import ru.dravn.androidlessons.fragments.CityListFragment;
 import ru.dravn.androidlessons.fragments.MapFragment;
+import ru.dravn.androidlessons.fragments.WeatherPagerFragment;
 import ru.dravn.androidlessons.fragments.WeatherViewFragment;
 import ru.dravn.androidlessons.service.WeatherService;
 
@@ -59,9 +62,11 @@ public class MainActivity extends AppCompatActivity
         startService(intent);
 
 
-        if(mFragmentManager.findFragmentByTag(getString(R.string.weatherFragment))==null) {
-            showWeatherFragment(null);
-        }
+        showFragment(WeatherPagerFragment.class,null);
+
+//        if(mFragmentManager.findFragmentByTag(getString(R.string.weatherFragment))==null) {
+//            showWeatherFragment(null);
+//        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -108,44 +113,78 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.selectCity:
-                showCityListFragment();
+                showFragment(CityListFragment.class, null);
                 return true;
             case R.id.selectByMap:
-                showMapFragment();
+                showFragment(MapFragment.class, null);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void showWeatherFragment(HashMap<String, String> mMessage) {
-
-        fragment = WeatherViewFragment.newInstance(mMessage);
-
+    public void showFragment(Class fragmentClass, HashMap<String, String> mMessage)
+    {
+        BaseFragment fragment;
+        String name = fragmentClass.getClass().getSimpleName();
+        if((fragment = (BaseFragment) mFragmentManager.findFragmentByTag(name))==null)
+        {
+           switch (name)
+            {
+                case "MapFragment":{
+                    fragment = MapFragment.newInstance();
+                    break;
+                }
+                case "CityListFragment":
+                {
+                    fragment = CityListFragment.newInstance();
+                    break;
+                }
+                case "WeatherPagerFragment":
+                {
+                    fragment = WeatherPagerFragment.newInstance(mMessage);
+                    break;
+                }
+                default:
+                {
+                    fragment = WeatherPagerFragment.newInstance(mMessage);
+                }
+            }
+        }
         mFragmentManager.beginTransaction()
                 .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
                 .addToBackStack(fragment.getClass().getSimpleName())
                 .commit();
     }
 
-    public void showMapFragment() {
-        fragment = MapFragment.newInstance();
-        mFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
-                .addToBackStack(fragment.getClass().getSimpleName())
-                .commit();
-    }
-
-
-    public void showCityListFragment() {
-        fragment = CityListFragment.newInstance();
-        mFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
-                .addToBackStack(fragment.getClass().getSimpleName())
-                .commit();
-    }
+//    public void showWeatherFragment(HashMap<String, String> mMessage) {
+//
+//        fragment = WeatherViewFragment.newInstance(mMessage);
+//
+//        mFragmentManager.beginTransaction()
+//                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+//                .addToBackStack(fragment.getClass().getSimpleName())
+//                .commit();
+ //   }
+//
+//    public void showMapFragment() {
+//        fragment = MapFragment.newInstance();
+//        mFragmentManager
+//                .beginTransaction()
+//                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+//                .addToBackStack(fragment.getClass().getSimpleName())
+//                .commit();
+//    }
+//
+//
+//    public void showCityListFragment() {
+//        fragment = CityListFragment.newInstance();
+//        mFragmentManager
+//                .beginTransaction()
+//                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+//                .addToBackStack(fragment.getClass().getSimpleName())
+//                .commit();
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -154,9 +193,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.selectByMap) {
-            showMapFragment();
+            showFragment(MapFragment.class, null);
         } else if (id == R.id.selectCity) {
-            showCityListFragment();
+            showFragment(CityListFragment.class, null);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_exit) {

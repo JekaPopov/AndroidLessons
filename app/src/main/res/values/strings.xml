@@ -5,6 +5,7 @@
     <string name="temp_current">Температура</string>
     <string name="humidity">Влажность</string>
     <string name="pressure">Давление</string>
+    <string name="temp_format_plus" translatable="false">+%1$s°C</string>
     <string name="temp_format" translatable="false">%1$s°C</string>
     <string name="pressure_format">%1$s мм</string>
     <string name="humidity_format" translatable="false">%1$s %%</string>
@@ -61,4 +62,5 @@
     <string name="serverError">Ошибка сервера</string>
     <string name="image_url">http://openweathermap.org/img/w/%1$s.png</string>
     <string name="edit_text_city">Введите город</string>
+    <string name="no_city">Город не найден</string>
 </resources>

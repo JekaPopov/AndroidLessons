@@ -1,12 +1,15 @@
 package ru.dravn.androidlessons.fragments;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
+import com.squareup.leakcanary.RefWatcher;
 
-import ru.dravn.androidlessons.R;
+import java.util.HashMap;
+
+import ru.dravn.androidlessons.App;
+import ru.dravn.androidlessons.MainActivity;
 
 
 public class BaseFragment extends Fragment {
@@ -21,8 +24,24 @@ public class BaseFragment extends Fragment {
     }
 
 
+    protected void showFragment(Class fragmentClass, HashMap<String, String> message)
+    {
+        ((MainActivity) getActivity()).showFragment(fragmentClass, message);
+    }
+
     protected void showMessage(String mMessage) {
         Toast.makeText(getActivity(), mMessage, Toast.LENGTH_LONG).show();
+    }
+
+    protected void showMessage(int mMessage) {
+        Toast.makeText(getActivity(), mMessage, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = App.getRefWatcher(getActivity());
+        refWatcher.watch(this);
     }
 
 }

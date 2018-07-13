@@ -1,10 +1,10 @@
 
 package ru.dravn.androidlessons.model;
 
+import android.renderscript.Sampler;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import static java.lang.String.*;
 
 public class Main {
 
@@ -13,7 +13,7 @@ public class Main {
     private Double temp;
     @SerializedName("pressure")
     @Expose
-    private Double pressure;
+    private double pressure;
     @SerializedName("humidity")
     @Expose
     private Integer humidity;
@@ -23,15 +23,33 @@ public class Main {
     @SerializedName("temp_max")
     @Expose
     private Double tempMax;
-    @SerializedName("sea_level")
-    @Expose
-    private Double seaLevel;
-    @SerializedName("grnd_level")
-    @Expose
-    private Double grndLevel;
+
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public Main() {
+    }
+
+    /**
+     * 
+     * @param humidity
+     * @param pressure
+     * @param tempMax
+     * @param temp
+     * @param tempMin
+     */
+    public Main(Double temp, Integer pressure, Integer humidity, Double tempMin, Double tempMax) {
+        super();
+        this.temp = temp;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.tempMin = tempMin;
+        this.tempMax = tempMax;
+    }
 
     public String getTemp() {
-        return valueOf(temp.intValue());
+        return String.valueOf(temp.intValue());
     }
 
     public void setTemp(Double temp) {
@@ -40,16 +58,16 @@ public class Main {
 
     public String getPressure() {
         ////перевод в ммHg
-        pressure = pressure * 0.75006375541921;
-        return valueOf(pressure.intValue());
+        pressure = (int)(pressure * 0.75006375541921);
+        return String.valueOf(pressure);
     }
 
-    public void setPressure(Double pressure) {
+    public void setPressure(Integer pressure) {
         this.pressure = pressure;
     }
 
     public String getHumidity() {
-        return valueOf(humidity);
+        return String.valueOf(humidity);
     }
 
     public void setHumidity(Integer humidity) {
@@ -57,7 +75,7 @@ public class Main {
     }
 
     public String getTempMin() {
-        return valueOf(tempMin.intValue());
+        return String.valueOf(tempMin.intValue());
     }
 
     public void setTempMin(Double tempMin) {
@@ -65,27 +83,11 @@ public class Main {
     }
 
     public String getTempMax() {
-        return valueOf(tempMax.intValue());
+        return String.valueOf(tempMax.intValue());
     }
 
     public void setTempMax(Double tempMax) {
         this.tempMax = tempMax;
-    }
-
-    public Double getSeaLevel() {
-        return seaLevel;
-    }
-
-    public void setSeaLevel(Double seaLevel) {
-        this.seaLevel = seaLevel;
-    }
-
-    public Double getGrndLevel() {
-        return grndLevel;
-    }
-
-    public void setGrndLevel(Double grndLevel) {
-        this.grndLevel = grndLevel;
     }
 
 }

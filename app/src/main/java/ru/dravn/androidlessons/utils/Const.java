@@ -23,11 +23,14 @@ public class Const {
     public static final String LONGITUDE = "longitude";
 
 
-    public static String  format(String val, String valName, Context context) {
+    public static String format(String val, String valName, Context context) {
         String format;
         switch (valName) {
             case Const.TEMP:
-                format = context.getResources().getString(R.string.temp_format);
+                if (Integer.valueOf(val) > 0)
+                    format = context.getResources().getString(R.string.temp_format_plus);
+                else
+                    format = context.getResources().getString(R.string.temp_format);
                 return String.format(format, val);
             case Const.HUMIDITY:
                 format = context.getResources().getString(R.string.humidity_format);

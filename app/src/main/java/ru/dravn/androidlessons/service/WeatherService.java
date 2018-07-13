@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -38,6 +39,8 @@ import ru.dravn.androidlessons.R;
 import ru.dravn.androidlessons.WeatherData;
 import ru.dravn.androidlessons.model.WeatherRequest;
 import ru.dravn.androidlessons.utils.Const;
+import ru.dravn.androidlessons.utils.PicassoMarker;
+import ru.dravn.androidlessons.utils.PicassoNoteIcon;
 
 
 public class WeatherService extends Service {
@@ -117,12 +120,21 @@ public class WeatherService extends Service {
 
     void makeNote(WeatherRequest response) {
 
+        int MSG = 123;
         NotificationCompat.Builder builder = new
-                NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                NotificationCompat.Builder(this, String.valueOf(MSG))
+                .setTicker("The ticker")
+                .setBadgeIconType(R.drawable.storm)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.sunny))
+                .setSmallIcon(R.drawable.place_holder)
                 .setContentTitle(response.getName())
                 .setContentText(Const.format(response.getMain().getTemp(), Const.TEMP, getApplicationContext()));
 
+
+        Picasso.get()
+                .load((Const.format(response.getWeather().get(0).getIcon(), Const.IMAGE, getApplicationContext())))
+                .placeholder(R.drawable.place_holder)
+                .into(new PicassoNoteIcon(builder));
 
         Intent resultIntent = new Intent(this, WeatherService.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -132,10 +144,10 @@ public class WeatherService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
         builder.setContentIntent(resultPendingIntent);
+
         NotificationManager notificationManager =
                 (NotificationManager)
                         getSystemService(Context.NOTIFICATION_SERVICE);
-        int MSG = 123;
         notificationManager.notify(MSG, builder.build());
     }
 

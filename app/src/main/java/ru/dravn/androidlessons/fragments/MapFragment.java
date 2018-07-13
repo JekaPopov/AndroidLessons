@@ -12,21 +12,29 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 import java.util.HashMap;
-
-import ru.dravn.androidlessons.MainActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ru.dravn.androidlessons.R;
+import ru.dravn.androidlessons.WeatherData;
+import ru.dravn.androidlessons.model.List;
+import ru.dravn.androidlessons.model.WeatherListRequest;
 import ru.dravn.androidlessons.utils.Const;
+import ru.dravn.androidlessons.utils.PicassoMarker;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
+
+    private Callback<WeatherListRequest> callback;
 
     public static MapFragment newInstance() {
 
@@ -59,6 +67,22 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         }
         supportMapFragment.getMapAsync(this);
 
+
+        callback = new Callback<WeatherListRequest>() {
+            @Override
+            public void onResponse(Call<WeatherListRequest> call, Response<WeatherListRequest> response) {
+                if (response.body() != null)
+                    setWeather(response.body());
+                else
+                    showMessage(R.string.no_city);
+            }
+
+            @Override
+            public void onFailure(Call<WeatherListRequest> call, Throwable t) {
+                t.printStackTrace();
+                showMessage(R.string.serverError);
+            }
+        };
     }
 
     @Override
@@ -81,11 +105,34 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
                 .getBestProvider(criteria, false));
 
         if (myLocation != null) {
-            map.moveCamera(CameraUpdateFactory.zoomTo(15.0f));
+            map.moveCamera(CameraUpdateFactory.zoomTo(12.0f));
 
             map.moveCamera(CameraUpdateFactory.newLatLng(
                     new LatLng(myLocation.getLatitude(), myLocation.getLongitude())));
+
+            String cityQty = "10";
+            WeatherData.loadCycle(callback, myLocation.getLatitude(), myLocation.getLongitude(), cityQty);
         }
+
+    }
+
+    private void setWeather(WeatherListRequest body) {
+
+        for (List city : body.getList()) {
+            Marker marker = map.addMarker(new MarkerOptions()
+                    .position(new LatLng(city.getCoord().getLat(), city.getCoord().getLon()))
+                    .snippet(city.getMain().getTemp())
+                    .title(city.getName()));
+
+
+
+            Picasso.get()
+                    .load((Const.format(city.getWeather().get(0).getIcon(), Const.IMAGE, getContext())))
+                    .resize(140, 120)
+                    .placeholder(R.drawable.place_holder)
+                    .into(new PicassoMarker(marker, Const.format(city.getMain().getTemp(), Const.TEMP, getContext()),city.getName() ));
+        }
+
     }
 
 
@@ -96,6 +143,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         message.put(Const.LATITUDE, String.valueOf(latLng.latitude));
         message.put(Const.LONGITUDE, String.valueOf(latLng.longitude));
 
-        ((MainActivity) getActivity()).showWeatherFragment(message);
+        showFragment(WeatherPagerFragment.class, message);
     }
+
+
 }

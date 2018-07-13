@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.SettingInjectorService;
 
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -23,16 +26,24 @@ public class App extends Application {
     private static final String APP_PREFERENCES = "mysettings";
     private static final String CITIESNAME = "city";
     private static SharedPreferences.Editor editor;
-
+    private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
         initRetrofit();
         initSharedPref();
+        refWatcher = LeakCanary.install(this);
         super.onCreate();
     }
 
-    private void initRetrofit(){
+    public static RefWatcher getRefWatcher(Context context) {
+        App application = (App) context.getApplicationContext();
+        return application.refWatcher;
+    }
+
+
+
+    private static OpenWeather initRetrofit(){
         Retrofit retrofit;
         retrofit = new Retrofit.Builder()
 //Базовая часть адреса
@@ -40,12 +51,12 @@ public class App extends Application {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 //Создаем объект, при помощи которого будем выполнять запросы
-        api = retrofit.create(OpenWeather.class);
+        return api = retrofit.create(OpenWeather.class);
     }
 
 
     public static OpenWeather getApi() {
-        return api;
+        return api==null?initRetrofit():api;
     }
 
 

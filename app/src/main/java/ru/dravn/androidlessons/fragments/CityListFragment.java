@@ -63,7 +63,7 @@ public class CityListFragment extends BaseFragment {
                                               App.setCitiesName(citiesName);
 
                                               message.put(Const.CITY, editText.getText().toString());
-                                              ((MainActivity) getActivity()).showWeatherFragment(message);
+                                              showFragment(WeatherPagerFragment.class, message);
                                               return true;
                                           }
                                           return false;
@@ -109,7 +109,8 @@ public class CityListFragment extends BaseFragment {
                     message.put(Const.CITY, holder.cityName.getText().toString());
                     if (((MainActivity) getActivity()).getMyService() != null)
                         ((MainActivity) getActivity()).getMyService().setCity(message.get(Const.CITY));
-                    ((MainActivity) getActivity()).showWeatherFragment(message);
+
+                    showFragment(WeatherPagerFragment.class, message);
                 }
             });
         }
@@ -130,5 +131,7 @@ public class CityListFragment extends BaseFragment {
             }
         }
     }
+
+
 
 }
