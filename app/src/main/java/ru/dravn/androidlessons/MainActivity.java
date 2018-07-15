@@ -1,26 +1,42 @@
 package ru.dravn.androidlessons;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.text.format.Time;
-import android.widget.TextView;
+import android.os.IBinder;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    private TextView cityName;
-    private TextView temp_current;
-    private TextView pressure;
-    private TextView humidity;
-    private TextView temp_min;
-    private TextView temp_max;
-    private TextView time_request;
+import ru.dravn.androidlessons.fragments.BaseFragment;
+import ru.dravn.androidlessons.fragments.CityListFragment;
+import ru.dravn.androidlessons.fragments.MapFragment;
+import ru.dravn.androidlessons.fragments.WeatherPagerFragment;
+import ru.dravn.androidlessons.fragments.WeatherViewFragment;
+import ru.dravn.androidlessons.service.WeatherService;
 
-    final private static String TEMP = "temp";
-    final private static String HUMIDITY = "hum";
-    final private static String PRESSURE = "press";
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    FragmentManager mFragmentManager;
+    BaseFragment fragment;
+    Intent intent;
+    ServiceConnection sConn;
+    boolean bound;
+    WeatherService myService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,45 +44,179 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        cityName = findViewById(R.id.city);
-        temp_current = findViewById(R.id.temp_current);
-        pressure = findViewById(R.id.pressure);
-        humidity = findViewById(R.id.humidity);
-        temp_min = findViewById(R.id.temp_min);
-        temp_max = findViewById(R.id.temp_max);
-        time_request = findViewById(R.id.time_request);
+        mFragmentManager = getSupportFragmentManager();
+
+        intent = new Intent(this, WeatherService.class);
+
+        sConn = new ServiceConnection() {
+            public void onServiceConnected(ComponentName name, IBinder binder) {
+                bound = true;
+                myService = ((WeatherService.MyBinder) binder).getService();
+            }
+
+            public void onServiceDisconnected(ComponentName name) {
+                bound = false;
+            }
+        };
+
+        startService(intent);
 
 
-        cityName.setText("Dolgoprudniy");
-        temp_current.setText(format(25,TEMP));
-        pressure.setText(format(747,PRESSURE));
-        humidity.setText(format(85,HUMIDITY));
-        temp_min.setText(format(20,TEMP));
-        temp_max.setText(format(27,TEMP));
+        showFragment(WeatherPagerFragment.class,null);
 
-        Time now = new Time();
-        now.setToNow();
-        time_request.setText(now.format("%d.%m.%Y %H.%M.%S"));
+//        if(mFragmentManager.findFragmentByTag(getString(R.string.weatherFragment))==null) {
+//            showWeatherFragment(null);
+//        }
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView =  findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private String format(int val, String valName)
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bindService(intent, sConn, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            if(mFragmentManager.getBackStackEntryCount()>1)
+            super.onBackPressed();
+            else
+            {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.selectCity:
+                showFragment(CityListFragment.class, null);
+                return true;
+            case R.id.selectByMap:
+                showFragment(MapFragment.class, null);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void showFragment(Class fragmentClass, HashMap<String, String> mMessage)
     {
-        String format;
-        switch (valName)
+        BaseFragment fragment;
+        String name = fragmentClass.getClass().getSimpleName();
+        if((fragment = (BaseFragment) mFragmentManager.findFragmentByTag(name))==null)
         {
-            case TEMP:
-                format = getResources().getString(R.string.temp_format);
-                return String.format(format, val);
-            case HUMIDITY:
-                format = getResources().getString(R.string.humidity_format);
-                return String.format(format, val);
-            case PRESSURE:
-                format = getResources().getString(R.string.pressure_format);
-                return String.format(format, val);
-            default: return "";
+           switch (name)
+            {
+                case "MapFragment":{
+                    fragment = MapFragment.newInstance();
+                    break;
+                }
+                case "CityListFragment":
+                {
+                    fragment = CityListFragment.newInstance();
+                    break;
+                }
+                case "WeatherPagerFragment":
+                {
+                    fragment = WeatherPagerFragment.newInstance(mMessage);
+                    break;
+                }
+                default:
+                {
+                    fragment = WeatherPagerFragment.newInstance(mMessage);
+                }
+            }
+        }
+        mFragmentManager.beginTransaction()
+                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+                .addToBackStack(fragment.getClass().getSimpleName())
+                .commit();
+    }
+
+//    public void showWeatherFragment(HashMap<String, String> mMessage) {
+//
+//        fragment = WeatherViewFragment.newInstance(mMessage);
+//
+//        mFragmentManager.beginTransaction()
+//                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+//                .addToBackStack(fragment.getClass().getSimpleName())
+//                .commit();
+ //   }
+//
+//    public void showMapFragment() {
+//        fragment = MapFragment.newInstance();
+//        mFragmentManager
+//                .beginTransaction()
+//                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+//                .addToBackStack(fragment.getClass().getSimpleName())
+//                .commit();
+//    }
+//
+//
+//    public void showCityListFragment() {
+//        fragment = CityListFragment.newInstance();
+//        mFragmentManager
+//                .beginTransaction()
+//                .replace(R.id.fragment, fragment,fragment.getClass().getSimpleName())
+//                .addToBackStack(fragment.getClass().getSimpleName())
+//                .commit();
+//    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.selectByMap) {
+            showFragment(MapFragment.class, null);
+        } else if (id == R.id.selectCity) {
+            showFragment(CityListFragment.class, null);
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_exit) {
+            finish();
         }
 
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
+    public WeatherService WeatherService  () {
+        return myService;
+    }
+
+    protected void onStop() {
+        super.onStop();
+        unbindService(sConn);
+    }
+
+    public WeatherService getMyService() {
+        return myService;
+    }
 }

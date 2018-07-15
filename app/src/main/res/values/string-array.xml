@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="weather">
+    <item name="sunny">@string/sunny</item>
+    <item name="hot">@string/hot</item>
+    <item name="partly_cloudy">@string/partly_cloudy</item>
+    <item name="rain">@string/rain</item>
+    <item name="snow">@string/snow</item>
+    <item name="storm">@string/storm</item>
+    <item name="cloudy">@string/cloudy</item>
+    </string-array>
+
+
+    <string-array name="city">
+        <item name="moscow">@string/moscow</item>
+        <item name="paris">@string/paris</item>
+        <item name="berlin">@string/berlin</item>
+        <item name="london">@string/london</item>
+        <item name="kiev">@string/kiev</item>
+        <item name="minsk">@string/minsk</item>
+        <item name="rim">@string/rim</item>
+    </string-array>
+
+</resources>

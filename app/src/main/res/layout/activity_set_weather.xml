@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MyStyle">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/cityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/editCity"
+        android:textSize="@dimen/middleText"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/minWidth"
+        android:layout_below="@+id/cityText"
+        android:layout_centerHorizontal="true"
+        android:inputType="textCapWords"
+        android:textSize="@dimen/middleText"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/temp_current_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/city"
+        android:layout_centerHorizontal="true"
+        android:text="@string/editTemp"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/temp_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/minWidth"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/temp_current_text"
+        android:inputType="numberDecimal"
+        android:textSize="@dimen/smallText"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/temp_max_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/temp_current"
+        android:layout_centerHorizontal="true"
+        android:text="@string/editMaxTemp"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/temp_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/temp_max_text"
+        android:layout_centerHorizontal="true"
+        android:minWidth="@dimen/minWidth"
+        android:inputType="numberDecimal"
+        android:textSize="@dimen/smallText"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/temp_min_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/temp_max"
+        android:layout_centerHorizontal="true"
+        android:text="@string/editMinTemp"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/temp_min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:minWidth="@dimen/minWidth"
+        android:inputType="numberDecimal"
+        android:layout_below="@+id/temp_min_text"
+        android:textSize="@dimen/smallText"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/pressure_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/temp_min"
+        android:layout_centerHorizontal="true"
+        android:text="@string/editPressure"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/pressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pressure_text"
+        android:layout_centerHorizontal="true"
+        android:minWidth="@dimen/minWidth"
+        android:inputType="number"
+        android:textSize="@dimen/smallText"
+        android:gravity="center"/>
+
+
+    <TextView
+        android:id="@+id/humidity_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pressure"
+        android:layout_centerHorizontal="true"
+        android:text="@string/editHumidity"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/humidity_text"
+        android:layout_centerHorizontal="true"
+        android:minWidth="@dimen/minWidth"
+        android:inputType="number"
+        android:textSize="@dimen/smallText"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/selectWeather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/humidity"
+        android:layout_centerHorizontal="true"
+        android:text="@string/selectWeather"
+        android:textSize="@dimen/smallText"
+        android:gravity="center"/>
+
+    <Spinner
+        android:id="@+id/weather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/weather"
+        android:layout_marginTop="@dimen/layout_marginBottom"
+        android:layout_below="@+id/selectWeather"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_marginBottom"
+        android:text="@string/sendData"
+        android:layout_below="@+id/weather"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"/>
+</RelativeLayout>
+</ScrollView>

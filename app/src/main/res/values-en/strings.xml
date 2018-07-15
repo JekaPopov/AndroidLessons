@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Weather</string>
+
+    <string name="city">City</string>
+    <string name="temp_current">Temperature</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="pressure_format">%1$d mm</string>
+    <string name="editCity">Enter city</string>
+    <string name="editTemp">Enter the current temperature</string>
+    <string name="editMaxTemp">Enter the maximum temperature</string>
+    <string name="editMinTemp">Enter the minimum temperature</string>
+    <string name="editPressure">Enter pressure</string>
+    <string name="editHumidity">Enter humidity</string>
+    <string name="sendData">Send data</string>
+    <string name="selectWeather">Select Weather</string>
+
+    <string name="sunny">Sunny</string>
+    <string name="hot">Hot</string>
+    <string name="partly_cloudy">Partly Cloudy</string>
+    <string name="rain">Rain</string>
+    <string name="snow">Snow</string>
+    <string name="storm">Storm</string>
+    <string name="cloudy">Cloudy</string>
+
+
+    <string name="moscow">Moscow</string>
+    <string name="paris">Paris</string>
+    <string name="berlin">Berlin</string>
+    <string name="london">London</string>
+    <string name="kiev">Kiev</string>
+    <string name="minsk">Minsk</string>
+    <string name="rim">Rim</string>
+
+</resources>

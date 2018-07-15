@@ -1,12 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Погода</string>
-
     <string name="city">Город</string>
     <string name="temp_current">Температура</string>
     <string name="humidity">Влажность</string>
     <string name="pressure">Давление</string>
+    <string name="temp_format_plus" translatable="false">+%1$s°C</string>
+    <string name="temp_format" translatable="false">%1$s°C</string>
+    <string name="pressure_format">%1$s мм</string>
+    <string name="humidity_format" translatable="false">%1$s %%</string>
+    <string name="editCity">Введите город</string>
+    <string name="editTemp">Введите текущую температуру</string>
+    <string name="editMaxTemp">Введите максимальную температуру</string>
+    <string name="editMinTemp">Введите минимальную температуру</string>
+    <string name="editPressure">Введите давление</string>
+    <string name="editHumidity">Введите влажность</string>
+    <string name="sendData">Передать данные</string>
+    <string name="selectWeather">Выберите погоду</string>
 
-    <string name="temp_format">%1$d°C</string>
-    <string name="pressure_format">%1$d mm</string>
-    <string name="humidity_format">%1$d %%</string>
+    <string name="sunny">Солнечно</string>
+    <string name="hot">Жарко</string>
+    <string name="partly_cloudy">Пременная облачность</string>
+    <string name="rain">Дождь</string>
+    <string name="snow">Снег</string>
+    <string name="storm">Гроза</string>
+    <string name="cloudy">Облачно</string>
+    <string name="menu">Просто меню</string>
+    <string name="weatherFragment">WeatherViewFragment</string>
+    <string name="mapFragment">MapFragment</string>
+    <string name="setWeatherFragment">setWeatherFragment</string>
+
+
+    <string name="moscow">Москва</string>
+    <string name="paris">Париж</string>
+    <string name="berlin">Берлин</string>
+    <string name="london">Лондон</string>
+    <string name="kiev">Киев</string>
+    <string name="minsk">Минск</string>
+    <string name="rim">Рим</string>
+    <string name="CityListFragment">CityListFragment</string>
+
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBGP0UxstYDQtxrBi6bwbdwoMwOlxd0ASE</string>
+    <string name="openWeatherMapApiKey">77fa93e1f50e406392affb609bcd8278</string>
+    <string name="permission">Необходимо разрешение на определение местоположения</string>
+
+    <string name="setting">Настройки</string>
+    <string name="selectCity">Выбор города</string>
+    <string name="selectByMap">Выбор на карте</string>
+    <string name="title_activity_main2"> </string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="select_position_by_map">Выбрать местоположение на карте</string>
+    <string name="select_city">Выбор города</string>
+    <string name="share">Поделиться</string>
+    <string name="exit">Выход</string>
+    <string name="device_temp">Температура устройства</string>
+    <string name="serverError">Ошибка сервера</string>
+    <string name="image_url">http://openweathermap.org/img/w/%1$s.png</string>
+    <string name="edit_text_city">Введите город</string>
+    <string name="no_city">Город не найден</string>
 </resources>
